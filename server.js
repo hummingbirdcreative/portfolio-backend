@@ -30,7 +30,13 @@ app.get('/', (req, res) => {
   res.send('hello portfolio');
 });
 
+// API Route
 app.use('/api/projects', projectsRouter);
+
+// Fallback Route
+app.get('/*', (req, res) => {
+    res.status(404).json({ message: 'not found' })
+});
 
 // Tell app to listen
 app.listen(PORT, () => {
