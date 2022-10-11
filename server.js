@@ -14,19 +14,23 @@ const { PORT = 4000, DATABASE_URL } = process.env;
 
 // Connect to MongoDB using Mongoose
 mongoose.connect(DATABASE_URL);
-app.use(cors()); 
-app.use(morgan("dev")); 
-app.use(express.json()); 
 
 // Mount Middleware
 mongoose.connection
 .on('connected', () => console.log('Connected to MongoDB'))
 .on('error', (error) => console.log(`MongoDB Error: ${error.message}`));
 
+app.use(cors()); 
+app.use(morgan("dev")); 
+app.use(express.json()); 
+
 // Define models
 const Schema = mongoose.Schema;
 const projectsSchema = new Schema({
-    image: String,
+    image: {
+        type: String,
+        default: "https://billfish.org/wp-content/uploads/2019/08/placeholder-image-705x529.jpg"
+    },
     title: String,
     description: String,
     link: String,
@@ -53,6 +57,26 @@ app.get('/projects', async (req, res) => {
 app.post('/projects', async (req, res) => {
     try {
       res.status(201).json(await Projects.create(req.body));
+    } catch (error) {
+      res.status(400).json({ message: 'bad request' });
+    }
+  });
+
+// Delete
+app.delete('/projects/:id', async (req, res) => {
+    try {
+      res.status(200).json(await Projects.findByIdAndDelete(req.params.id));
+    } catch (error) {
+      res.status(400).json({ message: 'bad request' });
+    }
+  })
+
+// Update
+app.put('/projects/:id', async (req, res) => {
+    try {
+      res.status(200).json(
+        await Projects.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      );
     } catch (error) {
       res.status(400).json({ message: 'bad request' });
     }
