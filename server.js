@@ -10,7 +10,6 @@ const app = express();
 require("dotenv").config();
 
 // Configure Settings
-require('dotenv').config();
 const { PORT = 4000, DATABASE_URL } = process.env;
 
 // Connect to MongoDB using Mongoose

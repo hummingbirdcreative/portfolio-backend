@@ -11,4 +11,4 @@ const projectsSchema = new Schema({
     link: String,
 }, { timestamps: true });
 
-const Projects = mongoose.model('Projects', projectsSchema);
+module.exports = mongoose.model('Projects', projectsSchema);
